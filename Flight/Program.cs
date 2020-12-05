@@ -9,18 +9,23 @@ namespace Flight
         static DateTime startTime = DateTime.Now;
 
         static Vector3 vec = new Vector3(1, 1, 1);
+
         static double angle = vec.GetAngle();
         static double radianAngle = (Math.PI / 180) * angle;
+
         static double startVelocity = 10;
+
         static double g = 9.81;
-        static double maxDistance = (startVelocity * startVelocity * Math.Sin(2 * angle)) / g;
         static double windage = 0.95;
+
+        static int Hz = 60;
+        static double deltaTime = 1000 / Hz;
+
+        static double maxHeight = (startVelocity * startVelocity * Math.Sin(angle) * Math.Sin(angle)) / (2 * g);
+        static double maxDistance = (startVelocity * startVelocity * Math.Sin(2 * angle)) / g;
 
         static void Main()
         {
-            int Hz = 60;
-            double deltaTime = 1 / Hz;
-
 
             double x = 0;
             double y = 0;
@@ -37,11 +42,15 @@ namespace Flight
             ClearLastConsoleLine();
 
             Console.WriteLine($"x:{x} y:{0}");
+
+            Console.WriteLine($"Max length: {x}");
+            Console.WriteLine($"Max height: {maxHeight}");
+            Console.WriteLine($"Time spent: {(DateTime.Now - startTime).TotalSeconds}");
         }
 
         static bool PassedTime()
         {
-            return ((DateTime.Now - startTime).TotalMilliseconds % 8 == 0);
+            return ((DateTime.Now - startTime).TotalMilliseconds % deltaTime < 1 || (DateTime.Now - startTime).TotalMilliseconds % deltaTime > 16);
         }
 
         static void CalculateCoordinates(ref double x, ref double y, double t)
